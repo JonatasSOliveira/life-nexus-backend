@@ -11,8 +11,25 @@ datasource db {
 }
 
 model User {
-  id Int @default(autoincrement()) @id
-  name String
-  email String @unique
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
   password String
+}
+
+model Bank {
+  id          Int           @id @default(autoincrement())
+  ispb        String        @unique
+  name        String        @unique
+  code        Int           @unique
+  full_name   String        @unique
+  BankAccount BankAccount[]
+}
+
+model BankAccount {
+  id       Int    @id @default(autoincrement())
+  bank     Bank   @relation(fields: [bank_id], references: [id])
+  bank_id  Int
+  nickname String
+  balance  Int    @default(0)
 }
