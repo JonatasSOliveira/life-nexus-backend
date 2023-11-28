@@ -1,10 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { createCipheriv, randomBytes, scrypt } from 'crypto';
+import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 import { UserRepository } from 'src/database/repositories/user-repository';
 import { User } from '@prisma/client';
 import { encryptionConstants } from '../constants/encryption.constants';
+import { SignUpRequestDTO } from '../dtos/requests/sign-up.dto';
 
 @Injectable()
 export class AuthService {
@@ -31,11 +32,11 @@ export class AuthService {
     return { acess_token: await this.generateAccessToken(user) };
   }
 
-  async signUp(
-    name: string,
-    email: string,
-    password: string,
-  ): Promise<{ acess_token: string }> {
+  async signUp({
+    name,
+    email,
+    password,
+  }: SignUpRequestDTO): Promise<{ acess_token: string }> {
     const user = await this.userRepository.create({
       name,
       email,
@@ -67,7 +68,11 @@ export class AuthService {
       Buffer.from(salt, 'hex'),
       32,
     )) as Buffer;
-    const decipher = createCipheriv('aes-256-cbc', key, Buffer.from(iv, 'hex'));
+    const decipher = createDecipheriv(
+      'aes-256-cbc',
+      key,
+      Buffer.from(iv, 'hex'),
+    );
     const decrypted = Buffer.concat([
       decipher.update(Buffer.from(encryptedPassword, 'hex')),
       decipher.final(),
