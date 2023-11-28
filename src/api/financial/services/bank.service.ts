@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Bank, Prisma } from '@prisma/client';
+import { Bank } from '@prisma/client';
 import { BankRepository } from 'src/database/repositories/bank-repository';
+import { BankCreateDto } from '../dtos/bank-create.dto';
 
 @Injectable()
 export class BankService {
@@ -10,7 +11,7 @@ export class BankService {
     return await this.bankRepository.findAll();
   }
 
-  async create(bank: Prisma.BankCreateInput): Promise<Bank> {
+  async create(bank: BankCreateDto): Promise<Bank> {
     return await this.bankRepository.create(bank);
   }
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, UseFilters } from '@nestjs/common';
 import { BankService } from '../services/bank.service';
 import { Bank } from '@prisma/client';
-import { BankCreateDto } from '../dtos/bank-create-dto';
+import { BankCreateDto } from '../dtos/bank-create.dto';
 import { PrismaClientKnownRequestErrorFilter } from 'src/database/exceptions/prisma-client-known-request-error.filter';
 
 @Controller('banks')
