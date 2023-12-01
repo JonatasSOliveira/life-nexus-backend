@@ -6,6 +6,10 @@ import { Injectable } from '@nestjs/common';
 export class UserRepository {
   constructor(private prisma: PrismaService) {}
 
+  async findById(id: number): Promise<User> {
+    return await this.prisma.user.findFirst({ where: { id } });
+  }
+
   async findOneByEmail(email: string): Promise<User> {
     return await this.prisma.user.findFirst({ where: { email } });
   }
